@@ -19,6 +19,7 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
+            overflow: hidden;
         }
 
         /* Cartão de Mensagem Principal */
@@ -31,6 +32,8 @@
             max-width: 450px;
             text-align: center;
             animation: surgir 0.8s ease-out;
+            position: relative;
+            z-index: 1;
         }
 
         .icone-coracao {
@@ -48,7 +51,6 @@
             font-weight: 700;
         }
 
-        /* Bloco da Mensagem Bonita */
         .mensagem {
             color: #5a6c7d;
             font-size: 1.1rem;
@@ -61,7 +63,6 @@
             border-left: 4px solid #ff5e62;
         }
 
-        /* Botão de Play Premium */
         .btn-play {
             background: linear-gradient(135deg, #ff9966, #ff5e62);
             color: white;
@@ -82,15 +83,29 @@
 
         .btn-play:active {
             transform: scale(0.98);
-            box-shadow: 0 3px 10px rgba(255, 94, 98, 0.4);
         }
 
-        /* Elemento de Vídeo Escondido (Só aparece em tela cheia) */
+        /* CORREÇÃO DO VÍDEO: Fica na tela, mas invisível e sem atrapalhar o clique */
         video {
-            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: black;
+            opacity: 0;
+            pointer-events: none;
+            z-index: -1;
         }
 
-        /* Animações Charmosas */
+        /* Classe ativada por JavaScript para trazer o vídeo para a frente em tela cheia */
+        video.modo-tela-cheia {
+            opacity: 1;
+            pointer-events: auto;
+            z-index: 9999;
+        }
+
         @keyframes surgir {
             from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
@@ -102,7 +117,6 @@
             100% { transform: scale(1); }
         }
 
-        /* Rodapé com a sua marca */
         .rodape {
             margin-top: 20px;
             font-size: 0.8rem;
@@ -113,7 +127,7 @@
 </head>
 <body>
 
-    <div class="cartao-surpresa">
+    <div class="cartao-surpresa" id="cartao">
         <span class="icone-coracao">❤️</span>
         <h1>Para o Melhor Pai!</h1>
         
@@ -135,31 +149,40 @@
         const video = document.getElementById('video-principal');
 
         botao.addEventListener('click', function() {
-            // 1. Inicia a reprodução do vídeo
-            video.play().then(() => {
-                // 2. Força o vídeo a entrar em modo tela cheia nativo do celular
-                if (video.requestFullscreen) {
-                    video.requestFullscreen();
-                } else if (video.webkitRequestFullscreen) { /* Safari / iOS */
-                    video.webkitRequestFullscreen();
-                } else if (video.msRequestFullscreen) {
-                    video.msRequestFullscreen();
-                }
-            }).catch(error => {
-                console.log("Erro ao abrir o vídeo:", error);
-                alert("Por favor, tente clicar novamente para liberar o vídeo!");
+            // 1. Torna o vídeo visível e joga para a frente antes do comando de tela cheia
+            video.classList.add('modo-tela-cheia');
+
+            // 2. Tenta abrir a tela cheia nativa do dispositivo
+            if (video.requestFullscreen) {
+                video.requestFullscreen();
+            } else if (video.webkitRequestFullscreen) { /* Dispositivos iOS / Safari */
+                video.webkitRequestFullscreen();
+            } else if (video.webkitEnterFullscreen) { /* Fallback alternativo para iPhones antigos */
+                video.webkitEnterFullscreen();
+            }
+
+            // 3. Dá o Play no vídeo com áudio liberado
+            video.play().catch(error => {
+                console.log("Erro ao reproduzir vídeo:", error);
             });
         });
 
-        // Caso o pai saia da tela cheia, o vídeo pausa automaticamente para não ficar rodando de fundo
-        document.addEventListener('fullscreenchange', handleFullscreenExit);
-        document.addEventListener('webkitfullscreenchange', handleFullscreenExit);
+        // Monitora quando o utilizador sai da tela cheia para esconder o vídeo novamente
+        document.addEventListener('fullscreenchange', checarSaidaTelaCheia);
+        document.addEventListener('webkitfullscreenchange', checarSaidaTelaCheia);
 
-        function handleFullscreenExit() {
+        function checarSaidaTelaCheia() {
             if (!document.fullscreenElement && !document.webkitFullscreenElement) {
                 video.pause();
+                video.classList.remove('modo-tela-cheia'); // Esconde o player e volta para o cartão de mensagem
             }
         }
+        
+        // Correção específica para o comportamento do iOS Safari
+        video.addEventListener('webkitendfullscreen', function() {
+            video.pause();
+            video.classList.remove('modo-tela-cheia');
+        });
     </script>
 </body>
 </html>
