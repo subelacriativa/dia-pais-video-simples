@@ -2,152 +2,163 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-    <title>Surpresa de Realidade Aumentada ✨</title>
-    
-    <script src="https://aframe.io/releases/1.3.0/aframe.min.js"></script>
-    <script src="https://raw.githack.com/AR-js-org/AR.js/master/aframe/build/aframe-ar.js"></script>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uma Surpresa Especial Para Você! ❤️</title>
     <style>
-        body {
+        * {
+            box-sizing: border-box;
             margin: 0;
-            overflow: hidden;
-            font-family: 'Segoe UI', Arial, sans-serif;
-            user-select: none;
-        }
-        
-        #instrucao {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: rgba(255, 94, 98, 0.95);
-            color: white;
-            padding: 12px 24px;
-            border-radius: 30px;
-            z-index: 999;
-            text-align: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            font-size: 0.9rem;
-            font-weight: bold;
-            width: 85%;
-            max-width: 320px;
-            pointer-events: none;
+            padding: 0;
         }
 
-        #botao-play {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: rgba(0, 0, 0, 0.85);
-            z-index: 1000;
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
             display: flex;
-            flex-direction: column;
             justify-content: center;
             align-items: center;
-            color: white;
-            text-align: center;
-            cursor: pointer;
-            transition: opacity 0.5s ease;
             padding: 20px;
-            box-sizing: border-box;
         }
 
-        #botao-play h2 { font-size: 1.6rem; margin-bottom: 10px; }
-        #botao-play p { font-size: 1rem; opacity: 0.9; }
+        /* Cartão de Mensagem Principal */
+        .cartao-surpresa {
+            background: white;
+            border-radius: 24px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            padding: 35px 25px;
+            width: 100%;
+            max-width: 450px;
+            text-align: center;
+            animation: surgir 0.8s ease-out;
+        }
+
+        .icone-coracao {
+            font-size: 3rem;
+            color: #ff5e62;
+            margin-bottom: 15px;
+            display: inline-block;
+            animation: pulsar 1.5s infinite;
+        }
+
+        h1 {
+            color: #2c3e50;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+
+        /* Bloco da Mensagem Bonita */
+        .mensagem {
+            color: #5a6c7d;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+            font-style: italic;
+            background: #f9fbfc;
+            padding: 20px;
+            border-radius: 16px;
+            border-left: 4px solid #ff5e62;
+        }
+
+        /* Botão de Play Premium */
+        .btn-play {
+            background: linear-gradient(135deg, #ff9966, #ff5e62);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            width: 100%;
+            box-shadow: 0 6px 20px rgba(255, 94, 98, 0.4);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-play:active {
+            transform: scale(0.98);
+            box-shadow: 0 3px 10px rgba(255, 94, 98, 0.4);
+        }
+
+        /* Elemento de Vídeo Escondido (Só aparece em tela cheia) */
+        video {
+            display: none;
+        }
+
+        /* Animações Charmosas */
+        @keyframes surgir {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulsar {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+
+        /* Rodapé com a sua marca */
+        .rodape {
+            margin-top: 20px;
+            font-size: 0.8rem;
+            color: #a0aec0;
+            letter-spacing: 1px;
+        }
     </style>
 </head>
 <body>
 
-    <div id="botao-play">
-        <h2>Preparar Mágica ❤️</h2>
-        <p>Toque em qualquer lugar da tela para ligar a câmera e ativar o som.</p>
+    <div class="cartao-surpresa">
+        <span class="icone-coracao">❤️</span>
+        <h1>Para o Melhor Pai!</h1>
+        
+        <div class="mensagem">
+            "Pai, cada momento ao seu lado é uma memória que guardo para sempre no coração. Obrigado por ser meu porto seguro, meu herói e meu melhor amigo. Preparei uma surpresa em vídeo para você lembrar o quanto te amo!"
+        </div>
+
+        <button class="btn-play" id="player-trigger">
+            <span>▶️</span> CLIQUE AQUI PARA VER A MÁGICA
+        </button>
+
+        <div class="rodape">SU BELA CRIATIVA</div>
     </div>
 
-    <div id="instrucao">Aponte a câmara para a frase na caneca! ✨</div>
+    <video id="video-principal" src="https://raw.githubusercontent.com/subelacriativa/ra/main/20260524_083410.mp4" crossorigin="anonymous" playsinline webkit-playsinline></video>
 
     <script>
-        // Criando um componente robusto do A-Frame para gerenciar o vídeo sem falhas
-        AFRAME.registerComponent('controle-video', {
-            init: function () {
-                const video = document.getElementById('video-mensagem');
-                
-                this.el.addEventListener('markerFound', () => {
-                    video.play().catch(err => console.log("Erro ao reproduzir:", err));
-                });
+        const botao = document.getElementById('player-trigger');
+        const video = document.getElementById('video-principal');
 
-                this.el.addEventListener('markerLost', () => {
-                    video.pause();
-                });
-            }
-        });
-    </script>
-
-    <a-scene embedded arjs="sourceType: webcam; debugUIEnabled: false; detectionMode: mono_and_matrix; matrixCodeType: 3x3;">
-        
-        <a-assets>
-            <!-- LINK CORRIGIDO PARA O MODO RAW DO GITHUB -->
-            <video 
-                id="video-mensagem" 
-                src="https://raw.githubusercontent.com/subelacriativa/ra/main/20260524_083410.mp4" 
-                preload="auto" 
-                loop="true" 
-                crossorigin="anonymous" 
-                playsinline 
-                webkit-playsinline>
-            </video>
-        </a-assets>
-
-        <!-- Adicionado o componente 'controle-video' aqui -->
-         <!-- Marcador com o componente de controle -->
-        <a-marker type="pattern" url="https://raw.githubusercontent.com/subelacriativa/ra/main/pattern-Montserrat%20Extra%20Bold.patt" id="marcador" controle-video>
-            
-            <!-- 
-               Ajustes feitos:
-               1. material="side: double" -> Faz o vídeo aparecer mesmo se estiver de cabeça para baixo ou invertido.
-               2. position="0 0.2 0" -> Eleva o vídeo 20cm acima da caneca para não sumir dentro dela.
-               3. scale="1.5 1.5 1.5" -> Aumenta o tamanho do plano para garantir que você o veja.
-            -->
-            <!-- 
-               Ajustes finos feitos:
-               1. position="-0.5 0.2 0" -> Mudamos o primeiro número de 0 para -0.5. Isso puxa o vídeo para a esquerda.
-               2. scale="1.2 1.6 1" -> Como o seu vídeo é vertical (celular), ajustamos a escala para ele não ficar "achatado" ou quadrado.
-            -->
-            <a-video 
-                src="#video-mensagem" 
-                position="-0.5 0.2 0" 
-                rotation="-90 0 0" 
-                scale="1.2 1.6 1"
-                material="side: double;">
-            </a-video>
-
-        </a-marker>
-
-        <a-entity camera></a-entity>
-    </a-scene>
-
-    <script>
-        const botaoPlay = document.getElementById('botao-play');
-        const video = document.getElementById('video-mensagem');
-
-        botaoPlay.addEventListener('click', function() {
-            // Desbloqueia o áudio reproduzindo e pausando imediatamente
+        botao.addEventListener('click', function() {
+            // 1. Inicia a reprodução do vídeo
             video.play().then(() => {
-                video.pause(); 
-                esconderBotao();
+                // 2. Força o vídeo a entrar em modo tela cheia nativo do celular
+                if (video.requestFullscreen) {
+                    video.requestFullscreen();
+                } else if (video.webkitRequestFullscreen) { /* Safari / iOS */
+                    video.webkitRequestFullscreen();
+                } else if (video.msRequestFullscreen) {
+                    video.msRequestFullscreen();
+                }
             }).catch(error => {
-                console.log("Interação aceita:", error);
-                esconderBotao();
+                console.log("Erro ao abrir o vídeo:", error);
+                alert("Por favor, tente clicar novamente para liberar o vídeo!");
             });
         });
 
-        function esconderBotao() {
-            botaoPlay.style.opacity = '0';
-            setTimeout(() => {
-                botaoPlay.style.display = 'none';
-            }, 500);
+        // Caso o pai saia da tela cheia, o vídeo pausa automaticamente para não ficar rodando de fundo
+        document.addEventListener('fullscreenchange', handleFullscreenExit);
+        document.addEventListener('webkitfullscreenchange', handleFullscreenExit);
+
+        function handleFullscreenExit() {
+            if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+                video.pause();
+            }
         }
     </script>
 </body>
